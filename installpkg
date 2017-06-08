@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+name=$1
+[ -z "$name" ] && echo 'Package name must be deffined' && exit 1
+
+tar xzf $name.tar.gz
+
+[ $? != 0 ] && echo "There was an error on package decompress" && exit 1
+
+cd $name
+
+makepkg -s
+
+pkgname=`ls $name*.pkg.tar.xz`
+
+sudo pacman -U $pkgname
+
+cd ..
+
+[ $? == 0 ] && rm -rf $name && echo "Package $name was successfully installed!"
